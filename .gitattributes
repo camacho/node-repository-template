@@ -1,0 +1,2 @@
+# Don't merge yarn.lock
+yarn.lock -diff

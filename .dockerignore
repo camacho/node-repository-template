@@ -1,0 +1,11 @@
+# ignore everything
+*
+
+# except whitelisted files
+!src
+!package.json
+!tsconfig.json
+!yarn.lock
+!README.md
+!CHANGELOG.md
+!LICENSE
