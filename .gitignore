@@ -54,8 +54,8 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
-.yarn-integrity
+# Yarn files
+.yarn-
 
 # dotenv environment variables file
 .env
@@ -65,3 +65,9 @@ typings/
 
 # Typescript build output
 build/
+
+# NPM build
+dist/
+
+# Local options
+.opt-*

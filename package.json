@@ -15,40 +15,43 @@
   "main": "build/lib/index.js",
   "files": [
     "build",
+    "CHANGELOG.md",
     "README.md",
-    "LICENSE",
-    "CHANGELOG.md"
+    "LICENSE"
   ],
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
   },
+  "publishConfig": {
+    "access": "restricted"
+  },
   "scripts": {
-    "prebuild": "yarn run clean-build",
-    "build": "tsc",
-    "clean": "npm-run-all clean-build clean-packages",
-    "clean-build": "rimraf ./build",
-    "clean-packages": "rimraf ./node_modules",
+    "build": "ncc build src/index.ts -o build",
+    "postbuild": "chmod +x build/index.js",
+    "clean": "rm -rf build/*",
     "commit": "git-cz",
-    "dev": "ts-node-dev --respawn --transpileOnly entrypoint.ts",
-    "format": "npm-run-all format-package format-source",
-    "format-package": "format-package -w",
-    "format-source": "prettier \"**/**{md,js,json,ts}\" --write",
-    "gamut": "npm-run-all reset format lint type-check test build",
-    "lint": "eslint . --ext .ts,.tsx",
-    "prepublishOnly": "yarn run gamut",
-    "reset": "yarn run clean && yarn install",
-    "start": "./entrypoint.sh",
+    "dev": "ncc run src/index.ts",
+    "format": "npm-run-all format-*",
+    "format-package": "format-package \"package.json\" \"!**/__fixtures__/**\" --write",
+    "format-source": "prettier \"**/**{yml,md,js,json,ts}\" --write",
+    "gamut": "npm-run-all format lint type-check test build",
+    "lint": "eslint . --color --ext .ts",
+    "prepbuild": "yarn clean",
+    "prerelease": "yarn build",
+    "release": "semantic-release",
+    "reset": "yarn clean && rm -rf node_modules",
+    "start": "./build/index.js",
     "test": "jest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "watch": "ncc build src/index.ts -o build -w"
   },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "post-merge": "install-deps-postmerge",
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
@@ -57,7 +60,7 @@
       "eslint",
       "git add"
     ],
-    "*.{md,js,json}": [
+    "*.{yml,md,js,json}": [
       "prettier --write",
       "git add"
     ],
@@ -69,104 +72,58 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
-  },
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": -10
-      }
-    },
-    "globals": {
-      "ts-jest": {
-        "diagnostics": true
-      }
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json"
     ],
-    "setupFilesAfterEnv": [
-      "jest-extended",
-      "<rootDir>/scripts/jest-setup.ts"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/build/",
-      "<rootDir>/node_modules/"
-    ],
-    "transform": {
-      ".ts": "ts-jest"
-    },
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname",
-      "jest-watch-master"
-    ]
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            "build/**",
-            "package.json",
-            "yarn.lock",
-            "README.md",
-            "CHANGELOG.md",
-            "LICENSE"
-          ]
-        }
+    "rules": {
+      "header-max-length": [
+        2,
+        "always",
+        100
       ],
-      "@semantic-release/npm"
-    ]
+      "scope-case": [
+        0
+      ]
+    }
   },
   "dependencies": {
     "convict": "^5.1.0",
-    "dotenv": "^8.0.0"
+    "dotenv": "^8.1.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.1.0",
-    "@commitlint/config-conventional": "^8.1.0",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@jedmao/semantic-release-npm-github-config": "^1.0.7",
     "@types/convict": "^4.2.1",
     "@types/dotenv": "^6.1.1",
-    "@types/jest": "^24.0.17",
-    "@types/node": "^12.7.1",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.8",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
+    "@zeit/ncc": "^0.20.5",
     "commitizen": "^4.0.3",
     "cz-conventional-changelog": "^3.0.2",
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.0.0",
+    "eslint": "^6.4.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jest": "^22.15.0",
+    "eslint-plugin-jest": "^22.17.0",
+    "eslint-watch": "6.0.1",
     "format-package": "^5.2.0",
-    "husky": "^3.0.3",
+    "husky": "^3.0.7",
     "install-deps-postmerge": "^1.0.5",
-    "jest": "^24.8.0",
-    "jest-extended": "^0.11.2",
+    "jest": "^24.9.0",
     "jest-mock-console": "^1.0.0",
-    "jest-validate": "^24.8.0",
+    "jest-snapshot-serializer-ansi": "1.0.0",
+    "jest-validate": "^24.9.0",
     "jest-watch-master": "^1.0.0",
-    "jest-watch-typeahead": "^0.3.1",
-    "lint-staged": "^9.2.1",
+    "jest-watch-typeahead": "^0.4.0",
+    "lint-staged": "^9.4.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
-    "rimraf": "^2.6.3",
-    "semantic-release": "^15.13.19",
-    "ts-jest": "^24.0.2",
-    "ts-node": "^8.3.0",
-    "ts-node-dev": "^1.0.0-pre.40",
-    "typescript": "^3.5.3"
+    "semantic-release": "^15.13.24",
+    "temp-dir": "^2.0.0",
+    "ts-jest": "^24.1.0",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3",
+    "uuid4": "^1.1.4"
   }
 }

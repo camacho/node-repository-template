@@ -1,7 +1,7 @@
-import { config } from '.';
+import { config } from "."
 
-describe('Config', () => {
-  it('build configuration based on schema', () => {
+describe("Config", () => {
+  it("build configuration based on schema", () => {
     expect(config.getProperties()).toMatchInlineSnapshot(`
       Object {
         "env": "test",
@@ -9,6 +9,6 @@ describe('Config', () => {
           "level": "INFO",
         },
       }
-    `);
-  });
-});
+    `)
+  })
+})

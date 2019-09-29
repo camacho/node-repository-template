@@ -21,4 +21,4 @@ COPY --from=builder /app/build ./build
 # Bring over the minimal number of files
 COPY --from=builder /app/README.md /app/CHANGELOG.md /app/LICENSE  \
   /app/package.json /app/yarn.lock ./ 
-CMD ["node", "./build/entrypoint.js"]
+CMD ["node", "./build/index.js"]
