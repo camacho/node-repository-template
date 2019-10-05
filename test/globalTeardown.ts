@@ -1,9 +1,10 @@
 import fs from "fs-extra"
+import chalk from "chalk"
 
-import { tmpDir } from "./utils"
+import { temporaryDirectory } from "./utils"
 
 export default async function globalTeardown() {
-  console.log("🧹 Cleaning up...")
-  await fs.remove(tmpDir)
-  console.log("👏 Cleanup done")
+  console.log("🗑  Removing temporary files")
+  await fs.remove(temporaryDirectory)
+  console.log(`${chalk.green("✔")}  Cleanup finished`)
 }

@@ -1,6 +1,10 @@
 module.exports = {
   preset: "ts-jest",
-  coveragePathIgnorePatterns: ["<rootDir>/test"],
+  coveragePathIgnorePatterns: [
+    "<rootDir>/test",
+    "<rootDir>/build",
+    "<rootDir>/dist",
+  ],
   coverageThreshold: {
     global: {
       branches: 100,
@@ -14,13 +18,24 @@ module.exports = {
       diagnostics: false,
     },
   },
-  verbose: true,
-  globalTeardown: "<rootDir>test/globalTeardown.ts",
-  moduleDirectories: ["<rootDir>/node_modules", "<rootDir>/src"],
+  globalSetup: "<rootDir>/test/globalSetup.ts",
+  globalTeardown: "<rootDir>/test/globalTeardown.ts",
+  moduleDirectories: ["<rootDir>/node_modules"],
   moduleFileExtensions: ["ts", "js"],
   setupFilesAfterEnv: ["<rootDir>/test/setup.ts"],
-  snapshotSerializers: ["jest-snapshot-serializer-ansi"],
-  testPathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: [
+    "<rootDir>/build/",
+    "<rootDir>/dist/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/test/__fixtures__/",
+  ],
+  verbose: true,
+  watchPathIgnorePatterns: [
+    "<rootDir>/build/",
+    "<rootDir>/dist/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/test/__fixtures__/",
+  ],
   watchPlugins: [
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname",

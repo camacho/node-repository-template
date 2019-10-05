@@ -1,0 +1,21 @@
+name: Stale Issues and Pull Requests
+
+on:
+  schedule:
+    - cron: "0 */1 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Stale Issues and Pull Requests
+        uses: actions/stale@master
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          days-before-stale: 15
+          days-before-close: 3
+          stale-issue-message: "This issue has been open for 30 days with no activity. It will be automatically closed in 5 days."
+          stale-pr-message: "This pull request has been open for 30 days with no activity. It will be automatically closed in 5 days."

@@ -37,6 +37,7 @@
       "files": ["**/**.test.ts", "test/**/**.{j,t}s"],
       "rules": {
         "import/first": "off",
+        "import/default": "off",
         "import/no-extraneous-dependencies": "off",
         "import/no-unassigned-import": "off",
         "no-console": "off"
